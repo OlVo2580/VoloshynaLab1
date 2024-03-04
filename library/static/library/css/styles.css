@@ -42,3 +42,10 @@ footer {
     padding: 20px;
     text-align: center;
 }
+
+.status {
+    font-weight: bold; /* Зробити текст жирним */
+    /* font-weight: normal; */ /* Зняти жирність (якщо потрібно) */
+    font-style: italic; /* Зробити текст курсивним */
+    /* font-style: normal; */ /* Зняти курсив (якщо потрібно) */
+}

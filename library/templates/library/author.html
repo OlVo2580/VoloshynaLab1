@@ -6,9 +6,7 @@
     {% for author in authors %}
         <li>
             <h2>{{ author }}</h2>
-            <form action="{% url 'author_edition' author.id %}" method="get">
-                <button type="submit" class="button">Перелік творів автора</button>
-            </form>
+                <a href="{% url 'author_edition' author.id %}"><button type="submit" class="button">Перелік творів автора</button></a>
         </li>
         {% if not forloop.last %}
             <hr>

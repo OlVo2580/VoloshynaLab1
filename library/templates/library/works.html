@@ -2,17 +2,13 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
+{{ author }}
 <ul>
-    {% for author in authors %}
+    {% for work in works %}
         <li>
-            <h2>{{ author }}</h2>
-            <form action="{% url 'author_edition' author.id %}" method="get">
-                <button type="submit" class="minimalist-button">Перелік творів</button>
-            </form>
+            <h4><a href="{% url 'abstract' work.edition.id %}">{{ work.edition.name }}</a></h4>
         </li>
-        {% if not forloop.last %}
-            <hr>
-        {% endif %}
+        <hr>
     {% endfor %}
 </ul>
 {% endblock %}

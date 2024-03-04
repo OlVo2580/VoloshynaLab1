@@ -1,22 +1,26 @@
 {% extends 'library/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
-<ul>
-    {% for edition in editions %}
-        <li>
-            <h2>{{ edition.name }}</h2>
-            <p> 
-                {% for edition_author in edition.editionsauthors_set.all %}
-                    {{ edition_author.author.first_name }} {{ edition_author.author.last_name }}
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </p>
-            <a href="{% url 'abstract' edition.id %}">Детальніше</a> <!-- Додано кнопку для перегляду деталей про книгу -->
-        </li>
-        {% if not forloop.last %}
-            <hr> <!-- Додано розмежувач між виданнями -->
-        {% endif %}
-    {% endfor %}
-</ul>
+    <h1>{{ title }}</h1>
+    <ul>
+        {% for edition, status in editions.items %}
+            <li>
+                <h2>{{ edition.name }}</h2>
+                {% if status %}
+                    <p class="status"> {{ status.name }}</p>
+                {% else %}
+                    <p class="status">Статус невідомий</p>
+                {% endif %}
+                <a href="{% url 'abstract' edition.id %}" class="details-link">Детальніше</a>
+            </li>
+            {% if not forloop.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </ul>
 {% endblock %}

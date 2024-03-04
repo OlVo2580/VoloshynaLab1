@@ -1,23 +1,14 @@
 {% extends 'library/base.html' %}
 
 {% block content %}
-    <h1>Список тем</h1>
+    <h1>{{ title }}</h1>
+    {{ subject }}
     <ul>
         {% for subject in subjects %}
             <li>
-                {{ subject.name }}
-                <button onclick="togglePublications('{{ subject.id }}')">Показати</button>
+                <h4><a href="{% url 'subject_editions' subject.id %}">{{ subject.name }}</a></h4>
+            </li>
+            <hr>
         {% endfor %}
     </ul>
-
-    <script>
-        function togglePublications(authorId) {
-            var publications = document.getElementById('publications_' + authorId);
-            if (publications.style.display === 'none') {
-                publications.style.display = 'block';
-            } else {
-                publications.style.display = 'none';
-            }
-        }
-    </script>
 {% endblock %}

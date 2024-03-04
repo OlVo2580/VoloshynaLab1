@@ -21,7 +21,7 @@ class Edition(models.Model):
     abstract = models.TextField(null=True)
     quantity_available = models.IntegerField(null=True)
     def __str__(self):
-        return self.name
+        return self.name 
 
 
 class EditionsAuthors(models.Model):
@@ -32,6 +32,8 @@ class EditionsAuthors(models.Model):
     class Meta:
         unique_together = ('edition', 'author')
 
+    def __str__(self):
+        return self.name
 
 
 class EditionsGenres(models.Model):

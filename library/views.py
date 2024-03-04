@@ -14,9 +14,17 @@ def index(request):
 
 def about(request):
     editions = Edition.objects.all()
-    abstract = Edition.objects.all()
-    status = Status.objects.all()
-    return render(request, 'library/about.html', {'editions': editions, 'menu': menu, 'title': 'Фонд кафедральної бібліотеки:'})
+    edition_statuses = {}
+    for edition in editions:
+        # Отримання всіх записів ReadersEditions для поточного видання
+        readers_editions = ReadersEditions.objects.filter(edition=edition)
+        # Отримання останнього статусу для поточного видання
+        if readers_editions.exists():
+            latest_status = readers_editions.latest('date_taken').status
+        else:
+            latest_status = None
+        edition_statuses[edition] = latest_status
+    return render(request, 'library/about.html', {'editions': edition_statuses, 'menu': menu, 'title': 'Фонд кафедральної бібліотеки:'})
 
 
 def author(request):
@@ -27,12 +35,22 @@ def author(request):
 def author_edition(request, author_id):
     author = get_object_or_404(Author, pk=author_id)
     editions = EditionsAuthors.objects.filter(author=author)
+
+    for edition_author in editions:
+        print(edition_author.edition.name)
     return render(request, 'library/works.html', {'title': 'Твори автора', 'author': author, 'works': editions})
 
 
 def subject(request):
      subject = Subject.objects.all()
      return render(request, 'library/subject.html', {'subjects': subject, 'menu' : menu, 'title' : 'За тематиками'})
+
+
+def subject_editions(request, subject_id):
+    subject = get_object_or_404(Subject, pk=subject_id)
+    editions_subjects = EditionsSubjects.objects.filter(subject=subject)
+    editions = [editions_subject.edition for editions_subject in editions_subjects]
+    return render(request, 'library/subject_editions.html', {'subject': subject, 'editions': editions})
 
 
 def abstract(request, edition_id):
