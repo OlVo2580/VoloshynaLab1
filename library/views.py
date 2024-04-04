@@ -1,6 +1,13 @@
+from pyexpat.errors import messages
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseNotFound
+from django.shortcuts import render, redirect
+from .forms import AddAuthorForm, AuthorForm, ChangeEditionStatusForm
+from .forms import AddAuthorForm, AddEditionForm
+
+
 from .models import *
 
 
@@ -26,10 +33,55 @@ def about(request):
         edition_statuses[edition] = latest_status
     return render(request, 'library/about.html', {'editions': edition_statuses, 'menu': menu, 'title': 'Фонд кафедральної бібліотеки:'})
 
+def update_edition_status(request, edition_id):
+    edition = get_object_or_404(Edition, pk=edition_id)
+    if request.method == 'POST':
+        form = ChangeEditionStatusForm(request.POST, instance=edition)
+        if form.is_valid():
+            form.save()
+            return redirect('some_success_url') 
+        else:
+         form = ChangeEditionStatusForm(instance=edition)
+    return render(request, 'library/update_edition_status.html', {'form': form})
 
 def author(request):
      author = Author.objects.all()  
      return render(request, 'library/author.html', {'authors': author, 'menu' : menu, 'title' : 'Автори'})
+
+def addauthor(request):
+    if request.method == 'POST':
+        form = AddAuthorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Автор успішно додано!')
+            return redirect('addauthor_success')  # Перенаправлення на сторінку успіху
+    else:
+        form = AddAuthorForm()
+
+    return render(request, 'library/addauthor.html', {'form': form, 'menu' : menu, 'title' : 'Додати '})
+
+def addauthor_success(request):
+    return render(request, 'library/addauthor_success.html')
+
+
+def delete_author(request, author_id):
+    author = get_object_or_404(Author, pk=author_id)
+    if request.method == 'POST':
+        author.delete()
+        return redirect('author')  # Перенаправити на сторінку авторів після видалення
+    return render(request, 'library/delete_author.html', {'author': author})
+
+def update_author(request, author_id):
+    author = Author.objects.get(pk=author_id)
+    if request.method == 'POST':
+        form = AuthorForm(request.POST, instance=author)
+        if form.is_valid():
+            form.save()
+            return redirect('author')  # Перенаправлення на сторінку авторів після успішного оновлення
+    else:
+        form = AuthorForm(instance=author)
+
+    return render(request, 'library/update_author.html', {'form': form})
 
 
 def author_edition(request, author_id):
@@ -61,6 +113,31 @@ def editions(request, editionsid):
      if(request.POST):
           print(request.POST)
      return HttpResponse (f"<h1>Видання наявні в бібліотеці</h1><p>{editionsid}</p>")
+
+def genre(request):
+     genres = Genre.objects.all()
+     return render(request, 'library/genre.html', {'genres': genres, 'menu' : menu, 'title' : 'За жанрами'})
+
+
+def genre_editions(request, genre_id):
+    genre = Genre.objects.get(pk=genre_id)
+    editions = Edition.objects.filter(editionsgenres__genre=genre)
+    return render(request, 'library/genre_edition.html', {'genre': genre, 'editions': editions})
+
+def addedition(request):
+    if request.method == 'POST':
+        form = AddEditionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Дані успішно збережено!")
+    else:
+        form = AddEditionForm()
+
+    return render(request, 'library/addedition.html', {'form': form, 'menu' : menu, 'title' : 'Додати видання'})
+
+
+
+
 
 
 def test(request):

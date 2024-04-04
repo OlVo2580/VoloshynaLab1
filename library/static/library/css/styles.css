@@ -11,7 +11,7 @@ header, main, footer {
 }
 
 header {
-    background-color: #F0F0F0;
+    background-color: #ffffff;
     padding: 20px;
 }
 
@@ -43,9 +43,41 @@ footer {
     text-align: center;
 }
 
+/* Додаткові стилі для анотації */
 .status {
     font-weight: bold; /* Зробити текст жирним */
     /* font-weight: normal; */ /* Зняти жирність (якщо потрібно) */
     font-style: italic; /* Зробити текст курсивним */
     /* font-style: normal; */ /* Зняти курсив (якщо потрібно) */
+}
+
+.form-fields {
+    margin-bottom: 20px; /* Збільшення відступу між полями */
+}
+
+.form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-control {
+    width: 100%;
+  }
+  
+  .btn-primary {
+    margin-top: 10px;
+  }
+
+
+  .genres-container {
+    column-count: 2; /* Встановлюємо кількість колонок */
+    column-gap: 20px; /* Встановлюємо відступ між колонками */
+}
+
+.genre-list {
+    list-style-type: none; /* Видаляємо маркери списку */
+    padding: 0; /* Видаляємо внутрішній відступ */
+}
+
+.genre-list li {
+    margin-bottom: 10px; /* Встановлюємо відступ між жанрами */
 }

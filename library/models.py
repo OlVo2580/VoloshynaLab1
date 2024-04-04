@@ -7,11 +7,17 @@ class Author(models.Model):
     pseudonym = models.CharField(max_length=25, null=True)
     country = models.ForeignKey('Country', on_delete=models.SET_NULL, null=True)
     def __str__(self):
-        return self.last_name
-
+        return self.first_name +" " + self.last_name
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
 class Country(models.Model):
     name = models.CharField(max_length=10, unique=True)
+    def __str__(self):
+        return self.name
+
+class Status(models.Model):
+    name = models.CharField(max_length=15, unique=True)
     def __str__(self):
         return self.name
 
@@ -20,8 +26,16 @@ class Edition(models.Model):
     name = models.CharField(max_length=50, null=True)
     abstract = models.TextField(null=True)
     quantity_available = models.IntegerField(null=True)
+    status = models.ForeignKey(Status, on_delete=models.SET_NULL, null=True)
     def __str__(self):
         return self.name 
+
+    class Meta:
+         ordering = ['name']
+    def __str__(self):
+        return self.name 
+    class Meta:
+         ordering = ['name']
 
 
 class EditionsAuthors(models.Model):
@@ -33,7 +47,7 @@ class EditionsAuthors(models.Model):
         unique_together = ('edition', 'author')
 
     def __str__(self):
-        return self.name
+        return self.author.first_name + " " + self.author.last_name  + "_" + self.edition.name
 
 
 class EditionsGenres(models.Model):
@@ -43,12 +57,22 @@ class EditionsGenres(models.Model):
     class Meta:
         unique_together = ('edition', 'genre')
 
+    def __str__(self):
+        return self.genre.name + " " +  self.edition.name
+
+
 class EditionsSubjects(models.Model):
     edition = models.ForeignKey(Edition, on_delete=models.CASCADE)
     subject = models.ForeignKey('Subject', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('edition', 'subject')
+        ordering = ['id']
+
+
+    def __str__(self):
+        return self.subject.name + " " +  self.edition.name
+    
 
 class Faculty(models.Model):
     name = models.CharField(max_length=50, null=True)
@@ -77,11 +101,11 @@ class ReadersEditions(models.Model):
     edition = models.ForeignKey(Edition, on_delete=models.CASCADE)
     date_taken = models.DateField(null=True)
     status = models.ForeignKey('Status', on_delete=models.SET_NULL, null=True)
-
-class Status(models.Model):
-    name = models.CharField(max_length=15, unique=True)
     def __str__(self):
-        return self.name
+        reader = str(self.reader)
+        edition = str(self.edition)
+
+        return reader + " "+ edition
 
 
 class Subject(models.Model):

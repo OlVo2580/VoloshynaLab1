@@ -13,6 +13,7 @@
                 <h2>{{ edition.name }}</h2>
                 {% if status %}
                     <p class="status"> {{ status.name }}</p>
+                    <a href="{% url 'change_status' edition.id %}" class="details-link">Змінити статус</a>
                 {% else %}
                     <p class="status">Статус невідомий</p>
                 {% endif %}
@@ -22,5 +23,11 @@
                 <hr>
             {% endif %}
         {% endfor %}
+         <!-- Додати посилання на сторінку додавання видання -->
+         <h2 style="text-align: right;">
+            <a href="{% url 'addedition' %}">
+                <button type="submit" class="button">Додати видання</button>
+            </a>
+        </h2>
     </ul>
 {% endblock %}
